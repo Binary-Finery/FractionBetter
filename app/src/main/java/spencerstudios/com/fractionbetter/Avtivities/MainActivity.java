@@ -1,20 +1,19 @@
 package spencerstudios.com.fractionbetter.Avtivities;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -24,19 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import spencerstudios.com.fractionbetter.Utilities.ColorBuilder;
 import spencerstudios.com.fractionbetter.R;
+import spencerstudios.com.fractionbetter.Utilities.ColorBuilder;
 import spencerstudios.com.fractionbetter.Utilities.LabelBuilder;
 
 public class MainActivity extends AppCompatActivity {
 
+    int pieChartToEdit = 1;
     private PieChart pieChartOne, pieChartTwo;
-
     private TextView tvPieOne, tvPieTwo;
     private TextView tvPieOnePercent, tvPieTwoPercent;
-    private TextView tvPieOneDecimal, tvPieTwoDecimal;
-
-    int pieChartToEdit = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         initViews();
         setPieChartConstants(pieChartOne, pieChartTwo);
-
-        initPieChart(pieChartOne, 6, 5, 1);
-        initPieChart(pieChartTwo, 4, 1, 2);
+        initPieChartDefaults();
     }
 
     private void setPieChartConstants(PieChart... pieChart) {
@@ -58,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             aPieChart.setDrawHoleEnabled(false);
             aPieChart.getDescription().setEnabled(false);
             aPieChart.getLegend().setEnabled(false);
-            aPieChart.setHighlightPerTapEnabled(false);
         }
     }
 
@@ -67,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         int nTotal = Integer.parseInt(t), nParts = Integer.parseInt(p);
-        return !(nTotal < 1 || nTotal > 25) && !(nParts > nTotal || nParts < 1);
+        return !(nTotal < 1 || nTotal > 25) && !(nParts > nTotal);
     }
 
     public void clickEvent(View view) {
@@ -75,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         displayEditValuesDialog(pieChartToEdit);
     }
 
+    private void initPieChartDefaults() {
+        initPieChart(pieChartOne, 3, 2, 1);
+        initPieChart(pieChartTwo, 4, 1, 2);
+    }
 
     private void initViews() {
 
@@ -115,20 +112,20 @@ public class MainActivity extends AppCompatActivity {
         PieDataSet set = new PieDataSet(entries, "");
 
         set.setColors(sliceColors);
-        set.setSliceSpace(0.3f);
+        set.setSliceSpace(.5f);
         set.setDrawValues(false);
 
         PieData data = new PieData(set);
         pc.setData(data);
-        pc.invalidate();
-        pc.setData(data);
+        pc.animateX(750, Easing.EasingOption.EaseInOutCirc);
         pc.invalidate();
     }
 
     private void displayEditValuesDialog(final int pieSelected) {
 
         LayoutInflater inflater = getLayoutInflater();
-        View valuesDialog = inflater.inflate(R.layout.values_dialog, (ViewGroup) null);
+        @SuppressLint("InflateParams")
+        View valuesDialog = inflater.inflate(R.layout.values_dialog, null);
 
         final TextView title = valuesDialog.findViewById(R.id.tv_dialog_title);
         final EditText etTotal = valuesDialog.findViewById(R.id.et_total);
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         dialog.setView(valuesDialog);
 
-        title.setText(String.format(Locale.getDefault(), "Values for pie chart %d", pieSelected));
+        title.setText(pieSelected == 1 ? "Top Pie Chart" : "Bottom Pie Chart");
 
         dialog.setPositiveButton("okay", new DialogInterface.OnClickListener() {
             @Override
