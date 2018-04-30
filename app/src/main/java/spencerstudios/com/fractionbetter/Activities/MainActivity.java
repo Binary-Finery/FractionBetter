@@ -1,7 +1,8 @@
-package spencerstudios.com.fractionbetter.Avtivities;
+package spencerstudios.com.fractionbetter.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,8 +65,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickEvent(View view) {
-        pieChartToEdit = view.getId() == R.id.iv_edit_pie_one ? 1 : 2;
-        displayEditValuesDialog(pieChartToEdit);
+        int id = view.getId();
+
+        if (id == R.id.iv_edit_pie_one) {
+            displayEditValuesDialog(1);
+        } else if (id == R.id.iv_edit_pie_two) {
+            displayEditValuesDialog(2);
+        } else if (id == R.id.iv_next_pie_one || id == R.id.iv_next_pie_two) {
+            String[] fraction = id == R.id.iv_next_pie_one ? tvPieOne.getText().toString().split("/") : tvPieTwo.getText().toString().split("/");
+            int parts = Integer.parseInt(fraction[0]);
+            int total = Integer.parseInt(fraction[1]);
+            Intent i = new Intent(MainActivity.this, EquivalentsActivity.class);
+            i.putExtra("parts", parts);
+            i.putExtra("total", total);
+            startActivity(i);
+        }
     }
 
     private void initPieChartDefaults() {
@@ -100,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
             tvPieTwoPercent.setText(String.format(Locale.getDefault(), "%.2f%%     %.2f", per, dec));
         }
 
-        int[] sliceColors = ColorBuilder.builder(total, parts);
-        String [] fraction = LabelBuilder.builder(total, parts);
+        int[] sliceColors = ColorBuilder.build(total, parts);
+        String[] fraction = LabelBuilder.build(total, parts);
 
         List<PieEntry> entries = new ArrayList<>();
 

@@ -4,10 +4,10 @@ import android.graphics.Color;
 
 public class ColorBuilder {
 
-    private static final int FRACTION_COLOR = Color.parseColor("#009688");
+    private static final int FRACTION_COLOR = Color.parseColor("#2196F3");
     private static final int EMPTY_COLOR = Color.WHITE;
 
-    public static int[] builder(int total, int parts) {
+    public static int[] build(int total, int parts) {
 
         int[] colors = new int[total];
 

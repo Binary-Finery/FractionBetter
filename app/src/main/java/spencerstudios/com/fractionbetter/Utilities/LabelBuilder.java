@@ -4,7 +4,7 @@ import java.util.Locale;
 
 public class LabelBuilder {
 
-    public static String[] builder(int total, int parts) {
+    public static String[] build(int total, int parts) {
 
         String[] labels = new String[total];
 
