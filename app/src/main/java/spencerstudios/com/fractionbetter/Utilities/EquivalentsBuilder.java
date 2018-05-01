@@ -2,34 +2,49 @@ package spencerstudios.com.fractionbetter.Utilities;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class EquivalentsBuilder {
 
-    public static List<String> build(int p, int t) {
+    public static List<String> build(int parts, int total) {
 
         List<String> equivalents = new ArrayList<>();
-        int total = t, parts = p, upperBound;
 
-        while (total % 2 == 0 && parts % 2 == 0) {
-            total /= 2;
-            parts /= 2;
-            equivalents.add(parts + "/" + total);
+        int fractionBase = findBaseNumber(parts, total);
+        int baseParts;
+        int baseTotal;
+
+        if (fractionBase == 1) {
+            baseParts = parts;
+            baseTotal = total;
+        } else {
+            baseParts = parts / fractionBase;
+            baseTotal = total / fractionBase;
         }
 
-        final int MAX_FRACTIONS_TO_DISPLAY = 10;
-
-        upperBound = MAX_FRACTIONS_TO_DISPLAY - equivalents.size();
-        Collections.reverse(equivalents);
-
-        if (equivalents.size() < MAX_FRACTIONS_TO_DISPLAY) {
-            for (int i = 0; i < upperBound; i++) {
-                p *= 2;
-                t *= 2;
-                equivalents.add(p + "/" + t);
+        for (int i = 1; i < 42; i++) {
+            if (!(baseParts * i == parts && baseTotal * i == total)) {
+                equivalents.add(baseParts * i + "/" + baseTotal * i);
             }
         }
+
         return equivalents;
+    }
+
+    private static int findBaseNumber(int parts, int total) {
+
+        int base = 1;
+        int tracker = parts;
+        boolean baseFound = false;
+
+        while (!baseFound && tracker > 0) {
+            if (parts % tracker == 0 && total % tracker == 0) {
+                base = tracker;
+                baseFound = true;
+            } else {
+                tracker--;
+            }
+        }
+        return base;
     }
 }

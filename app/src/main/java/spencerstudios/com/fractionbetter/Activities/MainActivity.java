@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import spencerstudios.com.bungeelib.Bungee;
 import spencerstudios.com.fractionbetter.R;
 import spencerstudios.com.fractionbetter.Utilities.ColorBuilder;
 import spencerstudios.com.fractionbetter.Utilities.LabelBuilder;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra("parts", parts);
             i.putExtra("total", total);
             startActivity(i);
+            Bungee.slideRight(MainActivity.this);
         }
     }
 

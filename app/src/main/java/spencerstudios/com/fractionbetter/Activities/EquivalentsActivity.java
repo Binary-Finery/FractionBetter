@@ -6,11 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import spencerstudios.com.bungeelib.Bungee;
 import spencerstudios.com.fractionbetter.Adapters.RvEquivalentsAdapter;
+import spencerstudios.com.fractionbetter.Constants.RvItemColorBackgroundFactory;
 import spencerstudios.com.fractionbetter.R;
 import spencerstudios.com.fractionbetter.Utilities.EquivalentsBuilder;
 
@@ -26,6 +30,14 @@ public class EquivalentsActivity extends AppCompatActivity {
         }
 
         final TextView tvInfo = findViewById(R.id.tv_info);
+        final ImageView ivBack = findViewById(R.id.iv_back);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         Intent intent = getIntent();
         int parts = intent.getIntExtra("parts", 3);
@@ -39,8 +51,14 @@ public class EquivalentsActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         rv.setLayoutManager(layoutManager);
         rv.hasFixedSize();
-        RvEquivalentsAdapter adapter = new RvEquivalentsAdapter(equivalents);
+        RvEquivalentsAdapter adapter = new RvEquivalentsAdapter(equivalents, RvItemColorBackgroundFactory.rvItemColors);
         rv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Bungee.slideLeft(EquivalentsActivity.this);
     }
 }
